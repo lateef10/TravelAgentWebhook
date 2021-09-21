@@ -1,6 +1,7 @@
 ﻿using AirlineSendAgent.ApplicationDbContext;
 using AirlineSendAgent.Client;
 using AirlineSendAgent.Models.Dtos;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -12,21 +13,34 @@ using System.Threading.Tasks;
 
 namespace AirlineSendAgent.App
 {
+    public class RabbitMqSettings
+    {
+        public string HostName { get; set; }
+        public int Port { get; set; }
+    }
+
     public class AppHost : IAppHost
     {
         private readonly SendAgentDbContext _context;
         private readonly IWebhookClient _webhookClient;
+        private readonly IOptions<RabbitMqSettings> _rabbitmqConfiguration;
+        public string HostName = "";
+        public int Port = 0;
 
-        public AppHost(SendAgentDbContext context, IWebhookClient webhookClient)
+        public AppHost(SendAgentDbContext context, IWebhookClient webhookClient, IOptions<RabbitMqSettings> rabbitmqConfiguration)
         {
             _context = context;
             _webhookClient = webhookClient;
+
+            _rabbitmqConfiguration = rabbitmqConfiguration;
+            HostName = _rabbitmqConfiguration.Value.HostName;
+            Port = _rabbitmqConfiguration.Value.Port;
         }
 
         //RabbitMQ Listener
         public void Run()
         {
-            var factory = new ConnectionFactory() { HostName = "localhost", Port = 31291 };
+            var factory = new ConnectionFactory() { HostName = HostName, Port = Port };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {

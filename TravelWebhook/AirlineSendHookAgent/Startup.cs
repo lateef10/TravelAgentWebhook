@@ -29,6 +29,8 @@ namespace AirlineSendAgent
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SendAgentDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("AirlineConnectionString")));
+            //Grab RabbitMQ connection from appsettings.json
+            services.Configure<RabbitMqSettings>(Configuration.GetSection("RabbitMQConnection"));
 
             services.AddScoped<IAppHost, AppHost>();
             services.AddSingleton<IWebhookClient, WebhookClient>();

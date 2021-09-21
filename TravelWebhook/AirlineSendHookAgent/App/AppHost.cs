@@ -75,7 +75,7 @@ namespace AirlineSendAgent.App
                     };
 
                     //In Production environment, it is better to implement a retry policy(Polly Library)
-                    //and sending the webhook concurrently instead of doing it in a loop
+                    //and send the webhook concurrently instead of doing it in a loop
                     foreach (var whs in _context.webhookSubscriptions.Where(subs => subs.WebhookType.Equals(message.WebhookType)))
                     {
                         webhookToSend.WebhookURI = whs.WebhookURI;

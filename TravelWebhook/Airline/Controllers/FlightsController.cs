@@ -1,4 +1,5 @@
 ﻿using Airline.ApplicationDbContext;
+using Airline.MessageBus;
 using Airline.Models;
 using Airline.Models.Dto;
 using AutoMapper;
@@ -17,11 +18,13 @@ namespace Airline.Controllers
 
         private readonly AirlineDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IMessageBusClient _messageBus;
 
-        public FlightsController(AirlineDbContext context, IMapper mapper)
+        public FlightsController(AirlineDbContext context, IMapper mapper, IMessageBusClient messageBus)
         {
             _context = context;
             _mapper = mapper;
+            _messageBus = messageBus;
         }
 
         [HttpGet("{flightCode}", Name = "GetFlightDetailsByCode")]
@@ -88,14 +91,14 @@ namespace Airline.Controllers
                 {
                     Console.WriteLine("Price Changed - Place message on bus");
 
-                    /*var message = new NotificationMessageDto
+                    var message = new NotificationMessageDto
                     {
                         WebhookType = "pricechange",
                         OldPrice = oldPrice,
                         NewPrice = flight.Price,
                         FlightCode = flight.FlightCode
                     };
-                    _messageBus.SendMessage(message);*/
+                    _messageBus.SendMessage(message);
                 }
                 else
                 {

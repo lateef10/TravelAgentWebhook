@@ -1,4 +1,5 @@
 using Airline.ApplicationDbContext;
+using Airline.MessageBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,8 +30,12 @@ namespace Airline
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AirlineDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("AirlineConnectionString")));
+            
+            //Grab RabbitMQ connection from appsettings.json
+            services.Configure<RabbitMqSettings>(Configuration.GetSection("RabbitMQConnection"));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddSingleton<IMessageBusClient, MessageBusClient>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

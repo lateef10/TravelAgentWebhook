@@ -8,6 +8,8 @@ using TravelAgent.Models.Dtos;
 
 namespace TravelAgent.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class NotificationsController : ControllerBase
     {
         private readonly TravelAgentDbContext _context;

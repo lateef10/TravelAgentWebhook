@@ -12,7 +12,7 @@
 <body>
     <div class="container">
         <!--##################START HERE#####################-->
-        <h1 class="display-3 text-center my-4">Pan Australian Airways</h1>
+        <h1 class="display-3 text-center my-4">NGN Airways</h1>
         <h3 class="display-5 text-center my-4">Webhook Registration</h3>
 
         <div id="alertSuccess" class="alert alert-success">
@@ -76,6 +76,7 @@
                         'Content-Type': 'application/json'
                     }
                 });
+                console.log(rawResponse);
 
                 const content = await rawResponse.json();
 
